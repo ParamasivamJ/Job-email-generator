@@ -1,9 +1,15 @@
 from flask import Flask, request, jsonify
+from functools import wraps
 from langchain_community.document_loaders import WebBaseLoader
 from langchain_core.prompts import PromptTemplate
 from langchain_core.output_parsers import JsonOutputParser
+import os
 
 app = Flask(__name__)
+
+# Environment variables for authentication
+USERNAME = os.getenv("USERNAME", "admin")  # Default username: admin
+PASSWORD = os.getenv("PASSWORD", "password")  # Default password: password
 
 # Define LLM and prompts
 llm = ChatGroq(
@@ -39,6 +45,16 @@ prompt_email = PromptTemplate.from_template(
     Write a professional email applying for the job above. Mention the role explicitly and tailor the email based on the skills and experience required. Ensure the tone is formal.
     """
 )
+
+def authenticate(func):
+    """Decorator to enforce basic authentication."""
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        auth = request.authorization
+        if not auth or auth.username != USERNAME or auth.password != PASSWORD:
+            return jsonify({"error": "Unauthorized"}), 401
+        return func(*args, **kwargs)
+    return wrapper
 
 def generate_email(job_link, user_name, user_email):
     try:
@@ -82,6 +98,7 @@ def generate_email(job_link, user_name, user_email):
 
 # Flask endpoint for generating job application emails
 @app.route("/generate_email", methods=["POST"])
+@authenticate  # Add authentication to the endpoint
 def generate_email_endpoint():
     data = request.get_json()
     job_link = data.get("job_link")
