@@ -8,7 +8,7 @@ import os
 app = Flask(__name__)
 
 # Environment variables for authentication
-USERNAME = os.getenv("USERNAME", "admin")  # Default username: admin
+USERNAME = os.getenv("USER_NAME", "admin")  # Default username: admin
 PASSWORD = os.getenv("PASSWORD", "password")  # Default password: password
 
 # Define LLM and prompts
