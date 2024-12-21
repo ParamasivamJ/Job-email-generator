@@ -1,18 +1,20 @@
 from flask import Flask, request, jsonify
-from functools import wraps
 from langchain_community.document_loaders import WebBaseLoader
 from langchain_core.prompts import PromptTemplate
 from langchain_core.output_parsers import JsonOutputParser
+from langchain_groq import ChatGroq
 import os
 
 app = Flask(__name__)
 
-# Environment variables for authentication
-USERNAME = os.getenv("USER_NAME")  # Default username: admin
-PASSWORD = os.getenv("PASSWORD")  # Default password: password
+# Fetch ChatGroq API key from environment variable
+CHATGROQ_API_KEY = os.getenv("CHATGROQ_API_KEY")
+if not CHATGROQ_API_KEY:
+    raise ValueError("ChatGroq API key not found! Set it as an environment variable.")
 
 # Define LLM and prompts
 llm = ChatGroq(
+    api_key=CHATGROQ_API_KEY,  
     temperature=0,
     model_name="llama-3.1-70b-versatile"
 )
@@ -45,16 +47,6 @@ prompt_email = PromptTemplate.from_template(
     Write a professional email applying for the job above. Mention the role explicitly and tailor the email based on the skills and experience required. Ensure the tone is formal.
     """
 )
-
-def authenticate(func):
-    """Decorator to enforce basic authentication."""
-    @wraps(func)
-    def wrapper(*args, **kwargs):
-        auth = request.authorization
-        if not auth or auth.username != USERNAME or auth.password != PASSWORD:
-            return jsonify({"error": "Unauthorized"}), 401
-        return func(*args, **kwargs)
-    return wrapper
 
 def generate_email(job_link, user_name, user_email):
     try:
@@ -103,7 +95,6 @@ def home():
     return "Flask App is Running!"
 
 @app.route("/generate_email", methods=["POST"])
-@authenticate  # Add authentication to the endpoint
 def generate_email_endpoint():
     data = request.get_json()
     job_link = data.get("job_link")
