@@ -4,185 +4,216 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Job Application Email Generator</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&family=Ubuntu:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Ubuntu:wght@400;700&display=swap" rel="stylesheet">
     <style>
-/* Basic Reset */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+        /* General Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-body {
-    font-family: 'Roboto', sans-serif;
-    background-color: #f7f7f7;
-    color: #333;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    overflow: hidden;
-    flex-direction: column;  /* Use column direction */
-}
+        body {
+            background-color: #f4f7fc;
+            color: #333;
+            font-family: 'Roboto', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
 
-.container {
-    width: 100%;
-    max-width: 900px;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    display: flex;
-    flex-direction: column;
-    height: 100%;  /* Make container take full height */
-}
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
 
-header {
-    background-color: #4CAF50;
-    color: white;
-    padding: 15px;
-    text-align: center;
-    font-size: 24px;
-    font-family: 'Ubuntu', sans-serif;
-    font-weight: bold;
-}
+        /* Header Styling */
+        header {
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            padding: 25px;
+            font-size: 28px;
+            font-family: 'Ubuntu', sans-serif;
+            font-weight: 700;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
 
-.main-content {
-    flex: 1;  /* Allow the main content to grow and fill available space */
-    padding: 20px;
-    overflow-y: auto;
-}
+        /* Main Content Area */
+        .main-content {
+            flex-grow: 1;
+            padding: 40px 30px;
+            overflow-y: auto;
+            background-color: #fafafa;
+            border-bottom: 2px solid #e1e1e1;
+        }
 
-.input-container {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    margin-bottom: 20px;
-}
+        .input-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
 
-.input-container input {
-    padding: 10px;
-    font-size: 16px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    outline: none;
-}
+        .input-container input,
+        .input-container button {
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            font-size: 16px;
+        }
 
-.input-container input:focus {
-    border-color: #4CAF50;
-}
+        .input-container input:focus,
+        .input-container button:focus {
+            outline: none;
+            border-color: #4CAF50;
+        }
 
-.input-container button {
-    padding: 12px;
-    background-color: #4CAF50;
-    color: white;
-    font-size: 16px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
+        .input-container input {
+            transition: all 0.3s ease;
+            font-size: 15px;
+        }
 
-.input-container button:hover {
-    background-color: #45a049;
-}
+        .input-container button {
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            border: none;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease;
+            padding: 16px;
+            text-transform: uppercase;
+            font-size: 18px;
+        }
 
-.output-container {
-    background-color: #f1f1f1;
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: inset 0 4px 6px rgba(0, 0, 0, 0.1);
-    white-space: pre-wrap;
-    word-wrap: break-word;
-    font-size: 14px;
-}
+        .input-container button:hover {
+            background-color: #45a049;
+        }
 
-footer {
-    background-color: #4CAF50;
-    color: white;
-    text-align: center;
-    padding: 10px;
-    font-size: 16px;
-    font-family: 'Ubuntu', sans-serif;
-    margin-top: auto; /* Push the footer to the bottom */
-}
+        /* Output Display Area */
+        .output-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-size: 16px;
+            font-family: 'Roboto', sans-serif;
+            border: 1px solid #e1e1e1;
+            max-height: 300px;
+            overflow-y: auto;
+        }
 
-/* Animation for output */
-.output-container {
-    animation: fadeIn 1s ease-in;
-}
+        /* Footer Styling */
+        footer {
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            font-size: 16px;
+            font-family: 'Ubuntu', sans-serif;
+            font-weight: 500;
+            margin-top: auto; /* Push footer to the bottom */
+        }
 
-@keyframes fadeIn {
-    0% { opacity: 0; }
-    100% { opacity: 1; }
-}
+        /* Animations */
+        .output-container {
+            animation: fadeIn 1s ease-in;
+        }
 
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        /* Media Queries for Responsiveness */
+        @media (max-width: 768px) {
+            header {
+                font-size: 24px;
+            }
+
+            .input-container input,
+            .input-container button {
+                font-size: 14px;
+            }
+
+            .output-container {
+                font-size: 14px;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Header -->
         <header>
             Job Application Email Generator
         </header>
 
-        <!-- Main Content -->
         <div class="main-content">
-            <!-- Input Fields -->
+            <!-- Input Section -->
             <div class="input-container">
-                <input type="text" id="job_link" placeholder="Enter the Job Link" />
-                <input type="text" id="user_name" placeholder="Enter Your Name" />
-                <input type="email" id="user_email" placeholder="Enter Your Email" />
+                <input type="text" id="job-link" placeholder="Enter Job Link" />
+                <input type="text" id="user-name" placeholder="Your Name" />
+                <input type="email" id="user-email" placeholder="Your Email" />
                 <button onclick="generateEmail()">Generate Email</button>
             </div>
 
-            <!-- Output Container -->
-            <div class="output-container" id="email_output">
-                <!-- Generated Email Content will appear here -->
+            <!-- Output Section -->
+            <div id="output-container" class="output-container">
+                <!-- Generated email will appear here -->
             </div>
         </div>
 
-        <!-- Footer -->
         <footer>
-            Developed by Paramasivam 
+            Developed by Paramasivam J
         </footer>
     </div>
 
     <script>
         async function generateEmail() {
-            const jobLink = document.getElementById('job_link').value;
-            const userName = document.getElementById('user_name').value;
-            const userEmail = document.getElementById('user_email').value;
+            const jobLink = document.getElementById("job-link").value;
+            const userName = document.getElementById("user-name").value;
+            const userEmail = document.getElementById("user-email").value;
 
             if (!jobLink || !userName || !userEmail) {
-                alert("Please fill in all fields!");
+                alert("Please fill all the fields.");
                 return;
             }
 
-            // Clear previous output
-            const outputDiv = document.getElementById('email_output');
-            outputDiv.innerHTML = 'Generating email...';
-
             try {
-                const response = await fetch('/generate_email', {
-                    method: 'POST',
+                const response = await fetch("/generate_email", {
+                    method: "POST",
                     headers: {
-                        'Content-Type': 'application/json',
+                        "Content-Type": "application/json",
                     },
                     body: JSON.stringify({
                         job_link: jobLink,
                         user_name: userName,
-                        user_email: userEmail
+                        user_email: userEmail,
                     }),
                 });
+
                 const data = await response.json();
 
-                if (data.email_content) {
-                    outputDiv.innerHTML = `<pre>${data.email_content}</pre>`;
+                if (data.error) {
+                    document.getElementById("output-container").textContent = "Error: " + data.error;
                 } else {
-                    outputDiv.innerHTML = `<span style="color: red;">Error: ${data.error}</span>`;
+                    document.getElementById("output-container").textContent = data.email_content;
                 }
             } catch (error) {
-                outputDiv.innerHTML = `<span style="color: red;">Error: ${error.message}</span>`;
+                console.error(error);
+                document.getElementById("output-container").textContent = "An error occurred. Please try again.";
             }
         }
     </script>
