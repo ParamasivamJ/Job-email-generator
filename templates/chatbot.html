@@ -3,76 +3,186 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Job Email Generator</title>
+    <title>Job Application Email Generator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&family=Ubuntu:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-        .chat-container {
-            max-width: 600px;
-            margin: auto;
-        }
-        .message {
-            margin-bottom: 10px;
-        }
-        .user-input {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
-        }
-        textarea, input, button {
-            font-size: 16px;
-        }
-        textarea {
-            width: 100%;
-            height: 100px;
-        }
+/* Basic Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f7f7f7;
+    color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
+    flex-direction: column;  /* Use column direction */
+}
+
+.container {
+    width: 100%;
+    max-width: 900px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    height: 100%;  /* Make container take full height */
+}
+
+header {
+    background-color: #4CAF50;
+    color: white;
+    padding: 15px;
+    text-align: center;
+    font-size: 24px;
+    font-family: 'Ubuntu', sans-serif;
+    font-weight: bold;
+}
+
+.main-content {
+    flex: 1;  /* Allow the main content to grow and fill available space */
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.input-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.input-container input {
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    outline: none;
+}
+
+.input-container input:focus {
+    border-color: #4CAF50;
+}
+
+.input-container button {
+    padding: 12px;
+    background-color: #4CAF50;
+    color: white;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.input-container button:hover {
+    background-color: #45a049;
+}
+
+.output-container {
+    background-color: #f1f1f1;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: inset 0 4px 6px rgba(0, 0, 0, 0.1);
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-size: 14px;
+}
+
+footer {
+    background-color: #4CAF50;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    font-size: 16px;
+    font-family: 'Ubuntu', sans-serif;
+    margin-top: auto; /* Push the footer to the bottom */
+}
+
+/* Animation for output */
+.output-container {
+    animation: fadeIn 1s ease-in;
+}
+
+@keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
     </style>
 </head>
 <body>
-    <div class="chat-container">
-        <h1>Job Application Email Generator</h1>
-        <div id="chat-log"></div>
-        <div class="user-input">
-            <input id="job_link" type="text" placeholder="Enter Job Link">
-            <input id="user_name" type="text" placeholder="Enter Your Name">
-            <input id="user_email" type="email" placeholder="Enter Your Email">
-            <button onclick="generateEmail()">Generate Email</button>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            Job Application Email Generator
+        </header>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Input Fields -->
+            <div class="input-container">
+                <input type="text" id="job_link" placeholder="Enter the Job Link" />
+                <input type="text" id="user_name" placeholder="Enter Your Name" />
+                <input type="email" id="user_email" placeholder="Enter Your Email" />
+                <button onclick="generateEmail()">Generate Email</button>
+            </div>
+
+            <!-- Output Container -->
+            <div class="output-container" id="email_output">
+                <!-- Generated Email Content will appear here -->
+            </div>
         </div>
+
+        <!-- Footer -->
+        <footer>
+            Developed by Paramasivam 
+        </footer>
     </div>
 
     <script>
         async function generateEmail() {
-            const jobLink = document.getElementById("job_link").value;
-            const userName = document.getElementById("user_name").value;
-            const userEmail = document.getElementById("user_email").value;
+            const jobLink = document.getElementById('job_link').value;
+            const userName = document.getElementById('user_name').value;
+            const userEmail = document.getElementById('user_email').value;
 
             if (!jobLink || !userName || !userEmail) {
                 alert("Please fill in all fields!");
                 return;
             }
 
-            const chatLog = document.getElementById("chat-log");
-            chatLog.innerHTML += `<div class="message"><strong>You:</strong> Generate email for job link: ${jobLink}</div>`;
+            // Clear previous output
+            const outputDiv = document.getElementById('email_output');
+            outputDiv.innerHTML = 'Generating email...';
 
-            const response = await fetch("/generate_email", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    job_link: jobLink,
-                    user_name: userName,
-                    user_email: userEmail
-                })
-            });
+            try {
+                const response = await fetch('/generate_email', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        job_link: jobLink,
+                        user_name: userName,
+                        user_email: userEmail
+                    }),
+                });
+                const data = await response.json();
 
-            const result = await response.json();
-            if (result.email_content) {
-                chatLog.innerHTML += `<div class="message"><strong>Bot:</strong> ${result.email_content}</div>`;
-            } else {
-                chatLog.innerHTML += `<div class="message"><strong>Bot:</strong> Error: ${result.error}</div>`;
+                if (data.email_content) {
+                    outputDiv.innerHTML = `<pre>${data.email_content}</pre>`;
+                } else {
+                    outputDiv.innerHTML = `<span style="color: red;">Error: ${data.error}</span>`;
+                }
+            } catch (error) {
+                outputDiv.innerHTML = `<span style="color: red;">Error: ${error.message}</span>`;
             }
         }
     </script>
