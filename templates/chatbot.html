@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Email Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .chat-container {
+            max-width: 600px;
+            margin: auto;
+        }
+        .message {
+            margin-bottom: 10px;
+        }
+        .user-input {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        textarea, input, button {
+            font-size: 16px;
+        }
+        textarea {
+            width: 100%;
+            height: 100px;
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <h1>Job Application Email Generator</h1>
+        <div id="chat-log"></div>
+        <div class="user-input">
+            <input id="job_link" type="text" placeholder="Enter Job Link">
+            <input id="user_name" type="text" placeholder="Enter Your Name">
+            <input id="user_email" type="email" placeholder="Enter Your Email">
+            <button onclick="generateEmail()">Generate Email</button>
+        </div>
+    </div>
+
+    <script>
+        async function generateEmail() {
+            const jobLink = document.getElementById("job_link").value;
+            const userName = document.getElementById("user_name").value;
+            const userEmail = document.getElementById("user_email").value;
+
+            if (!jobLink || !userName || !userEmail) {
+                alert("Please fill in all fields!");
+                return;
+            }
+
+            const chatLog = document.getElementById("chat-log");
+            chatLog.innerHTML += `<div class="message"><strong>You:</strong> Generate email for job link: ${jobLink}</div>`;
+
+            const response = await fetch("/generate_email", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    job_link: jobLink,
+                    user_name: userName,
+                    user_email: userEmail
+                })
+            });
+
+            const result = await response.json();
+            if (result.email_content) {
+                chatLog.innerHTML += `<div class="message"><strong>Bot:</strong> ${result.email_content}</div>`;
+            } else {
+                chatLog.innerHTML += `<div class="message"><strong>Bot:</strong> Error: ${result.error}</div>`;
+            }
+        }
+    </script>
+</body>
+</html>

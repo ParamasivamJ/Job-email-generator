@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from langchain_community.document_loaders import WebBaseLoader
 from langchain_core.prompts import PromptTemplate
 from langchain_core.output_parsers import JsonOutputParser
@@ -88,11 +88,9 @@ def generate_email(job_link, user_name, user_email):
         print("Error Traceback:", error_details)
         return {"error": str(e)}
 
-# Flask endpoint for generating job application emails
-
 @app.route("/")
 def home():
-    return "Flask App is Running!"
+    return render_template("chatbot.html")
 
 @app.route("/generate_email", methods=["POST"])
 def generate_email_endpoint():
